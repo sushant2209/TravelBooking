@@ -9,6 +9,7 @@ This is a full-featured **Travel Booking Web Application** that allows users to 
 - **Framework**: Django 🧑‍💻
 - **Frontend**: HTML, CSS, and JS 🎨
 - **Database**: MySQL 🗄️
+- **API** - Django REST Framework 🤝
 
 ## 🚀 Deployment
 
