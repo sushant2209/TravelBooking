@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ travel_option.get_type_display }} Details{% endblock %}
+
+{% block content %}
+    <h1>{{ travel_option.get_type_display }} Details</h1>
+    <div class="travel-detail">
+        <h2>{{ travel_option.source }} to {{ travel_option.destination }}</h2>
+        <p>Date/Time: {{ travel_option.date_time }}</p>
+        <p>Price: ${{ travel_option.price }}</p>
+        <p>Available Seats: {{ travel_option.available_seats }}</p>
+        <p>Travel ID: {{ travel_option.travel_id }}</p>
+        {% if travel_option.available_seats > 0 %}
+            <a href="{% url 'booking_create' travel_option.pk %}" class="btn">Book Now</a>
+        {% else %}
+            <p class="sold-out">Sold Out</p>
+        {% endif %}
+    </div>
+{% endblock %}

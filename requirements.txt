@@ -1,0 +1,9 @@
+Django
+djangorestframework
+python-decouple
+django-cors-headers
+drf-yasg
+setuptools
+django-filter
+pymysql
+whitenoise

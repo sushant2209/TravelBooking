@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Travel Options{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .search-form {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .search-form label {
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .search-form select,
+    .search-form input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .search-form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.2s;
+    }
+
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
+
+    .travel-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        
+    }
+
+    .travel-option {
+        border: none;
+        border-radius: 12px;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .travel-option:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .travel-option-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .travel-icon {
+        font-size: 2.5rem;
+        color: #007bff;
+    }
+
+    .travel-option h2 {
+        font-size: 1.6rem;
+        margin: 0;
+        color: #333;
+    }
+
+    .travel-details {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .travel-details dt {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .travel-details dd {
+        margin: 0;
+        color: #333;
+    }
+
+    .price{
+        font-size: 2rem;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 15px
+    }
+
+    .travel-option .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.2s ease-in-out;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .travel-option .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Available Travel Options</h1>
+
+<form method="get" action="{% url 'travel_list' %}" class="search-form">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="id_source">Source:</label>
+            <select name="source" id="id_source" class="city-select">
+                <option value="">Select source city</option>
+                {% for city in cities %}
+                <option value="{{ city.name }}" {% if form.cleaned_data.source == city.name %}selected{% endif %}>
+                    {{ city.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_destination">Destination:</label>
+            <select name="destination" id="id_destination" class="city-select">
+                <option value="">Select destination city</option>
+                {% for city in cities %}
+                <option value="{{ city.name }}" {% if form.cleaned_data.destination == city.name %}selected{% endif %}>
+                    {{ city.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="id_travel_type">Travel Type:</label>
+            {{ form.travel_type }}
+        </div>
+        <div class="form-group">
+            <label for="id_date">Date:</label>
+            {{ form.date }}
+        </div>
+        <div class="form-group">
+            <label for="id_sort_by">Sort by:</label>
+            {{ form.sort_by }}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div class="travel-options">
+    {% for option in travel_options %}
+        <div class="travel-option">
+            <div class="travel-option-header">
+                <div class="travel-icon">
+                    {% if option.type == 'BUS' %}
+                        <i class="fas fa-bus" title="Bus"></i>
+                    {% elif option.type == 'TRAIN' %}
+                        <i class="fas fa-train" title="Train"></i>
+                    {% elif option.type == 'FLIGHT' %}
+                        <i class="fas fa-plane" title="Flight"></i>
+                    {% endif %}
+                </div>
+                <h2>{{ option.get_type_display }}</h2>
+            </div>
+            <dl class="travel-details">
+                <dt>From:</dt>
+                <dd>{{ option.source }}</dd>
+                <dt>To:</dt>
+                <dd>{{ option.destination }}</dd>
+                <dt>Date:</dt>
+                <dd>{{ option.date_time|date:"F d, Y" }}</dd>
+                <dt>Time:</dt>
+                <dd>{{ option.date_time|time:"H:i" }}</dd>
+                <dt>Available <br>Seats:</dt>
+                <dd>{{ option.available_seats }}</dd>
+            </dl>
+            <div class="price">₹{{ option.price }}</div>
+            <a href="{% url 'booking_create' option.id %}" class="btn">Book Now</a>
+        </div>
+    {% empty %}
+        <p>No travel options found matching your criteria.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.city-select').select2();
+
+        // Function to update destination options
+        function updateDestinationOptions() {
+            var sourceCity = $('#id_source').val();
+            var destinationSelect = $('#id_destination');
+            
+            destinationSelect.find('option').prop('disabled', false);
+            if (sourceCity) {
+                destinationSelect.find('option[value="' + sourceCity + '"]').prop('disabled', true);
+            }
+            destinationSelect.select2('destroy').select2();
+        }
+
+        // Update destination options when source changes
+        $('#id_source').change(updateDestinationOptions);
+
+        // Initial update
+        updateDestinationOptions();
+    });
+</script>
+{% endblock %}

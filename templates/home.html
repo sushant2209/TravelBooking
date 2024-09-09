@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to Travel Booking{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Discover Your Next Adventure</h1>
+    <p>Find and book your perfect travel experience with us!</p>
+    <a href="{% url 'travel_list' %}" class="btn btn-large">Explore Travel Options</a>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <img src="{% static 'images/destination.png' %}" alt="Diverse Destinations">
+        <h3>Diverse Destinations</h3>
+        <p>Explore a wide range of exciting locations around the globe.</p>
+    </div>
+    <div class="feature-card">
+        <img src="{% static 'images/best-price.png' %}" alt="Best Prices">
+        <h3>Best Prices</h3>
+        <p>Get the most competitive rates for your travel plans.</p>
+    </div>
+    <div class="feature-card">
+        <img src="{% static 'images/support.png' %}" alt="24/7 Support">
+        <h3>24/7 Support</h3>
+        <p>Our team is always here to assist you with any queries.</p>
+    </div>
+</div>
+{% endblock %}

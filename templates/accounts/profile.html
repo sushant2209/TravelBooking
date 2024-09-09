@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>Your Profile</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <h2>Update User Information</h2>
+        {{ user_form.as_p }}
+        <p><a href="{% url 'password_change' %}">Change Password</a></p>
+        <h2>Update Profile Information</h2>
+        {{ profile_form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+
+    <h2>Your Bookings</h2>
+    {% for booking in user.booking_set.all %}
+        <div class="card">
+            <h3>{{ booking.travel_option.name }}</h3>
+            <p>Booking ID: {{ booking.booking_id }}</p>
+            <p>Date: {{ booking.travel_option.date_time|date:"F d, Y" }}</p>
+            <p>Number of Seats: {{ booking.number_of_seats }}</p>
+            <p>Total Price: ${{ booking.total_price }}</p>
+            <p>Status: {{ booking.status }}</p>
+        </div>
+    {% empty %}
+        <p>You haven't made any bookings yet.</p>
+    {% endfor %}
+    
+    <a href="{% url 'travel_list' %}" class="btn">Book a New Trip</a>
+</div>
+{% endblock %}
